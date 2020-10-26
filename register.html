@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>小U商城注册页</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/font/iconfont.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="./utils/myAjax.js"></script>
+</head>
+
+<body>
+    <div class="lg_header">
+        <div class="layout">
+            <a href="./index.html" class="logo">
+                <img src="./images/logo.jpg" alt="">
+            </a>
+            <p class="logo_text">
+                欢迎注册
+            </p>
+        </div>
+    </div>
+    <div class="reg_main">
+
+        <div class="reg_box">
+            <div class="login_content">
+                <div class="title">
+                    注册账号
+                </div>
+                <div class="username">
+                    <div class="name_icon">
+                        <span class="iconfont">&#xe857;</span>
+                    </div>
+                    <input type="text" class="input_name" placeholder="请输入邮箱">
+                </div>
+                <div class="prompt">
+
+                </div>
+                <div class="password">
+                    <div class="word_icon">
+                        <span class="iconfont">&#xe636;</span>
+                    </div>
+                    <input type="text" class="input_word" placeholder="密码">
+                </div>
+                <div class="prompt">
+
+                </div>
+                <div class="code">
+                    <input type="text" class="input_code" placeholder="验证码">
+                    <div class="code_icon">
+                        <img id="captcha" src="http://localhost:3000/users/captcha" alt="">
+                    </div>
+                </div>
+                <div class="prompt">
+
+                </div>
+                <a href="javascript:;">
+                    <div class="btn" id="reg">
+                        注册
+                    </div>
+                </a>
+                <div class="function">
+                    已有账号
+                    <a href="./login.html">
+                        <span class="go_login">去登陆</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="copyright">
+        <div>
+            Copyright&copy;2010-2020 小U商城 版权所有 保留一切权利
+        </div>
+        <div>
+            京ICP备10218183 京ICP证161188号 京公网安备 11010802020593号 出版经营许可证新出发京批字第直130052号
+        </div>
+    </div>
+
+    <script>
+        $('#captcha').click(function() {
+            this.src = `http://localhost:3000/users/captcha?${new Date().getTime()}`
+        })
+
+        // 点击注册
+        $("#reg").click(async function() {
+            var user = $(".input_name").val()
+            var pwd = $(".input_word").val()
+            var code = $(".input_code").val()
+
+            var params = {
+                user,
+                pwd,
+                code
+            }
+
+            let res = await myAjax({
+                type: "post",
+                url: "http://localhost:3000/users/reg",
+                data: params
+            })
+            let str = res.msg
+            $(".prompt").html("")
+
+
+            if (res.code == 1) {
+                if (!$("input").eq(1).val()) {
+                    $(".prompt").eq(1).html(str)
+                } else {
+                    $(".prompt").eq(0).html(str)
+                }
+            } else if (res.code == 2) {
+                $(".prompt").eq(2).html(str)
+            } else if (res.code == 0) {
+                location.href = "./login.html"
+
+            }
+        })
+    </script>
+</body>
+
+</html>
